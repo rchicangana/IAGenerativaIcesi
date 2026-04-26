@@ -1,0 +1,5 @@
+sku,nombre,categoria,precio_cop,stock,estado
+ECO-001,Botella reutilizable,accesorios,35000,82,disponible
+ECO-002,Bolsa compostable 50u,hogar,18000,140,disponible
+ECO-003,Kit cubiertos bambu,cocina,42000,0,agotado
+ECO-004,Shampoo solido,belleza,27000,57,disponible
