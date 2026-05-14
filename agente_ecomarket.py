@@ -11,7 +11,7 @@ from pathlib import Path
 from dotenv import load_dotenv
 from langchain_ollama import ChatOllama
 from langchain_core.messages import HumanMessage, AIMessage, SystemMessage
-from langgraph.prebuilt import create_react_agent
+from langchain.agents import create_agent
 
 from tools import (
     consultar_informacion_pedido,
@@ -91,10 +91,10 @@ Traduce siempre el resultado a lenguaje natural, amigable y bien estructurado.
 
 def construir_agente(llm, tools: list):
     """Crea y devuelve el agente LangGraph con las tools registradas."""
-    return create_react_agent(
+    return create_agent(
         model=llm,
         tools=tools,
-        prompt=SYSTEM_PROMPT,
+        system_prompt=SYSTEM_PROMPT,
     )
 
 

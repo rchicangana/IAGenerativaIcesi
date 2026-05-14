@@ -9,6 +9,7 @@ from typing import Any
 from uuid import UUID
 
 from dotenv import load_dotenv
+from langsmith import traceable
 import streamlit as st
 from langchain_core.callbacks import BaseCallbackHandler
 from langchain_core.messages import AIMessage, HumanMessage, ToolMessage
@@ -117,6 +118,7 @@ def _render_panel_debug_turno(turno: dict) -> None:
         _render_tools_expanders(tools)
 
 
+@traceable(name="extraer_tools_del_turno")
 def _extraer_tools(mensajes: list) -> list[dict]:
     """Empareja AIMessage.tool_calls con ToolMessage por tool_call_id."""
     resultados = {
