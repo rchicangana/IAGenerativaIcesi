@@ -95,6 +95,175 @@ Finalmente, el agente entrega al usuario la información generada por la tool, i
 
 ---
 
+# Fase 3 — Análisis Crítico y Propuestas de Mejora 
+
+## Seguridad y Ética
+### Implementar una Capa de Validación de Políticas 
+Actualmente el agente depende principalmente de instrucciones en el prompt para decidir cuándo ejecutar herramientas. Como mejora, se propone agregar una capa intermedia que valide las acciones antes de ejecutarlas.
+
+Beneficios
+
+- Evita que el agente ejecute acciones no autorizadas.
+- Reduce riesgos por prompt injection.
+- Garantiza cumplimiento de reglas de negocio críticas.
+### Incorporar Human-in-the-Loop para Casos Sensibles
+No todas las decisiones deberían automatizarse completamente. Se propone escalar automáticamente ciertos casos a un operador humano.
+
+Casos de Escalamiento
+
+- Devoluciones de alto valor
+- Productos premium
+- Múltiples devoluciones del mismo cliente
+- Conflictos de políticas
+- Caja confianza del agente
+
+Beneficios
+
+- Reduce errores críticos.
+- Incrementa confiabilidad del sistema.
+- Mejora gobernanza de la IA.
+
+### Protección contra Prompt Injection
+Aunque el prompt actual incluye restricciones, se recomienda reforzar la protección mediante mecanismos técnicos adicionales.
+
+Mejoras Propuestas
+
+- Sanitización de entradas del usuario.
+- Separación estricta entre:
+  - Instrucciones del sistema.
+  - Contexto RAG.
+  - Mensajes del usuario.
+- WhiteList de tools autorizadas.
+- Restricción de parámetros permitidos.
+
+### Validación de Identidad y Control de Acceso
+La consulta de pedidos y devoluciones implica acceso a información sensible. Se propone implementar
+
+- Autenticación del cliente antes de acceder a pedidos.
+- Verificación de propiedad del pedido.
+- Tokens de sesión.
+- Rate limiting.
+
+Evitar acceso no autorizado a:
+
+- Direcciones
+- Historial de compras
+- Información personal
+
+### Motor Determinístico para Decisiones Críticas
+Actualmente parte del razonamiento depende del LLM. Como mejora, las decisiones críticas deberían ejecutarse mediante lógica determinística.
+
+Ejemplo
+```
+if dias\_desde\_entrega > 15:
+
+    elegible = False
+```
+En lugar de:
+```
+El LLM interpreta si la devolución es válida.
+```
+Beneficios
+
+- Mayor consistencia.
+- Menor riesgo de alucinaciones.
+- Trazabilidad de reglas.
+
+## Monitoreo y Observabilidad
+### Sistema Centralizado de Logs
+Se propone registrar todas las acciones ejecutadas por el agente.
+
+Beneficios
+
+- Auditoría.
+- Depuración de errores.
+- Trazabilidad de decisiones.
+- Investigación de incidentes.
+
+### Trazabilidad de Decisiones del Agente
+
+El sistema debe registrar por qué el agente tomó una decisión. Por ejemplo:
+```
+Devolución rechazada:
+
+- Producto perecedero
+- Política recuperada desde RAG
+- Pedido entregado hace 18 días
+```
+Beneficios
+
+- Explicabilidad.
+- IA responsable.
+- Transparencia operativa.
+
+### Sistema de Alertas Automáticas
+
+Se propone generar alertas ante comportamientos anómalos.
+
+Casos Detectables
+
+- Demasiadas devoluciones consecutivas.
+- Múltiples pedidos inválidos.
+- Exceso de llamadas a tools.
+- Intentos de prompt injection.
+- Loops conversacionales.
+
+Beneficios
+
+- Detección temprana de fraude.
+- Prevención de fallos operativos.
+- Supervisión continua.
+
+### Dashboard de Observabilidad
+
+Crear un panel administrativo para monitorear el sistema en tiempo real.
+
+Métricas Recomendadas
+
+|**Métrica**|**Objetivo**|
+| :-: | :-: |
+|Latencia promedio|rendimiento|
+|Tool failure rate|estabilidad|
+|Tasa de escalamiento humano|confiabilidad|
+|Prompt injection attempts|seguridad|
+|Hallucination rate|calidad|
+|Número de devoluciones|operación|
+
+
+## Nuevas Funcionalidades con Agentes
+
+### Agente de Reemplazo Automático
+
+Si un producto es elegible para cambio, el agente podría:
+
+- Consultar inventario,
+- Sugerir productos similares,
+- Crear automáticamente una orden de reemplazo.
+
+Beneficios
+
+- Mejora experiencia del cliente.
+- Reduce intervención humana.
+- Agiliza logística.
+
+### Integración con CRM
+El agente podría actualizar automáticamente información del cliente.
+
+- Cambiar dirección.
+- Actualizar teléfono. 
+- Registrar preferencias. 
+- Documentar incidencias.
+### Agente de Recomendaciones Sostenibles
+Basado en historial de compra, el agente podría recomendar:
+
+- Productos ecológicos similares.
+- Reemplazos sostenibles.
+- Promociones personalizadas.
+
+
+
+---
+
 # Fase 4 — Despliegue de la aplicación
 
 ## Selección de la herramienta de interfaz (Streamlit vs Gradio)
