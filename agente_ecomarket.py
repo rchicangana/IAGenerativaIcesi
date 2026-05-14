@@ -24,6 +24,10 @@ from tools import (
 # ---------------------------------------------------------------------------
 BASE_DIR = Path(__file__).resolve().parent
 CHAT_MODEL = "qwen3.5:2b"
+# El modelo trae context length 262144 (256K) por defecto, lo cual fuerza
+# un KV cache enorme que no cabe en VRAM y obliga a Ollama a correr 100% CPU.
+# Con 8192 tokens es más que suficiente para este agente y permite GPU.
+NUM_CTX = 8192
 
 SYSTEM_PROMPT = """Eres EcoBot, el asistente virtual de atención al cliente de EcoMarket,
 una tienda de productos ecológicos y sostenibles.
@@ -150,7 +154,7 @@ def main() -> None:
     print("Inicializando RAG y herramientas...")
 
     # Inicializar LLM
-    llm = ChatOllama(model=CHAT_MODEL, temperature=0)
+    llm = ChatOllama(model=CHAT_MODEL, temperature=0, num_ctx=NUM_CTX)
 
     # Inicializar tools (el RAG se construye aquí para reutilizar el vectorstore)
     consultar_politicas = build_consultar_politicas_ecomarket()

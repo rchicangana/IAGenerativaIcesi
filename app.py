@@ -14,7 +14,7 @@ from langchain_core.callbacks import BaseCallbackHandler
 from langchain_core.messages import AIMessage, HumanMessage, ToolMessage
 from langchain_ollama import ChatOllama
 
-from agente_ecomarket import CHAT_MODEL, construir_agente
+from agente_ecomarket import CHAT_MODEL, NUM_CTX, construir_agente
 from tools import (
     build_consultar_politicas_ecomarket,
     consultar_informacion_pedido,
@@ -159,7 +159,7 @@ def _render_tools_expanders(tools_list: list[dict]) -> None:
 @st.cache_resource(show_spinner="Inicializando RAG y agente...")
 def cargar_agente():
     load_dotenv()
-    llm = ChatOllama(model=CHAT_MODEL, temperature=0)
+    llm = ChatOllama(model=CHAT_MODEL, temperature=0, num_ctx=NUM_CTX)
     consultar_politicas = build_consultar_politicas_ecomarket()
     tools = [
         consultar_informacion_pedido,
