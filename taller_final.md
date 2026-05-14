@@ -271,23 +271,23 @@ Se eligió Streamlit porque permite crear una interfaz conversacional de forma r
 ### 2. Funcionalidad para el agente
 
 - Tiene componentes nativos para construir interfaces tipo chat.
-- Permite guardar el historial de conversación usando session_state, manteniendo el contexto entre preguntas.
+- Permite guardar el historial de conversación manteniendo el contexto entre preguntas.
 - Facilita reutilizar componentes pesados como el modelo, embeddings y vectorstore sin cargarlos nuevamente en cada interacción.
 - Se implementó un modo debug para mostrar:
-  - qué tool se ejecutó,
-  - qué argumentos recibió,
-  - qué respondió,
-  - y cuánto tardó.
+  - qué tool se ejecutó
+  - qué argumentos recibió
+  - qué respondió
+  - cuánto tardó
 - También se incluyó un botón para reiniciar la conversación durante las pruebas.
 
 ## ¿Por qué no Gradio?
 
 Gradio es una muy buena opción para crear demos rápidas y compartirlas fácilmente. Sin embargo, para este proyecto se necesitaba más control sobre:
 
-- el historial conversacional,
-- la memoria del agente,
-- las tools ejecutadas,
-- y la visualización del flujo interno del agente.
+- el historial conversacional
+- la memoria del agente
+- las tools ejecutadas
+- la visualización del flujo interno del agente
 
 En este caso, Streamlit permitió implementar estas funcionalidades de forma más flexible y sencilla.
 
