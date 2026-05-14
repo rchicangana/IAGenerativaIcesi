@@ -1,3 +1,8 @@
+## Integrantes:
+ - Laura Isabel Chaparro
+ - Ricardo Chicangana
+ - Fabian Ortiz Collazos
+
 # Fase 1 — Diseño de la Arquitectura del Agente
 
 Se selecciona el RAG como herramienta para consultar_politicas_ecomarket. El LLM con tool calling puede enrutar de forma implícita, es decir, si el prompt del sistema lo obliga a citar las políticas, el modelo aprende a llamar la tool antes de responder. Se gana simplicidad arquitectónica y se mantiene la observabilidad porque toda llamada a la tool queda registrada.
