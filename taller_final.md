@@ -11,11 +11,11 @@ Se selecciona el RAG como herramienta para consultar_politicas_ecomarket. El LLM
 | Conversaciones complejas | Limitadas             | Muy buenas    |
 | Control del flujo        | Determinístico        | Dinámico      |
 
-## 3. Definición de las herramientas
+## Definición de las herramientas
 
 Cumpliendo el mínimo de dos herramientas además del RAG, se definen tres:
 
-### 3.1 `consultar_informacion_pedido`
+### `consultar_informacion_pedido`
 
 | Atributo  | Detalle                                                                                                |
 | --------- | ------------------------------------------------------------------------------------------------------ |
@@ -23,7 +23,7 @@ Cumpliendo el mínimo de dos herramientas además del RAG, se definen tres:
 | Entrada   | numero_pedido: string                                                                                  |
 | Salida    | Datos básicos del pedido (cliente, productos, estado, fecha).    
 
-### 3.2 `consultar_politicas_ecomarket`
+### `consultar_politicas_ecomarket`
 
 | Atributo  | Detalle                                                                                                          |
 | --------- | ---------------------------------------------------------------------------------------------------------------- |
@@ -31,7 +31,7 @@ Cumpliendo el mínimo de dos herramientas además del RAG, se definen tres:
 | Entrada   | consulta: string en lenguaje natural.                                                                             |
 | Salida   | Chunks relacionados con la consulta    |
 
-### 3.3 `generar_etiqueta_devolucion`
+### `generar_etiqueta_devolucion`
 
 | Atributo        | Detalle                                                                                                                                |
 | --------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
@@ -40,7 +40,7 @@ Cumpliendo el mínimo de dos herramientas además del RAG, se definen tres:
 | Seguridad       | Re-valida la elegibilidad internamente, aunque el agente ya lo haya hecho. Nunca confiar solo en el LLM para decisiones críticas. |
 | Salida          | {exito: bool, codigo_etiqueta: str\|None, url_etiqueta: str\|None, mensaje: str}.    
 
-## 4. Selección del marco de agentes
+## Selección del marco de agentes
 
 Se selecciona LanChain debido a:
 
@@ -72,15 +72,15 @@ Aunque LlamaIndex es muy fuerte en recuperación documental y RAG, LangChain ofr
 - mejor ecosistema de agentes
 - mayor flexibilidad para tools y flujos de automatización más simples para este caso práctico.
 
-## 5. Planificación del flujo de trabajo
+## Planificación del flujo de trabajo
 
-# Diagrama de flujo del Agente EcoMarket
+### Diagrama de flujo del Agente EcoMarket
 
 ![Diagrama de flujo](flujo_agente_ecomarket.svg)
 
 El flujo planteado inicia con el mensaje del usuario, el cual es procesado por el LLM para detectar la intención principal de la consulta. A partir de esta clasificación, el agente puede dirigir la conversación hacia uno de cuatro escenarios posibles:
 
-- Consulta de información de un pedido.
+- Consulta de información de un pedido y verificación de correo electrónico.
 - Solicitud de devolución.
 - Solicitud de información general sobre documentos o políticas de la empresa.
 - Mensajes fuera del alcance del agente o intentos de prompt injection.
