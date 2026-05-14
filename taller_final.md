@@ -115,7 +115,6 @@ Casos de Escalamiento
 - Productos premium
 - Múltiples devoluciones del mismo cliente
 - Conflictos de políticas
-- Caja confianza del agente
 
 Beneficios
 
@@ -170,15 +169,6 @@ Beneficios
 - Trazabilidad de reglas.
 
 ## Monitoreo y Observabilidad
-### Sistema Centralizado de Logs
-Se propone registrar todas las acciones ejecutadas por el agente.
-
-Beneficios
-
-- Auditoría.
-- Depuración de errores.
-- Trazabilidad de decisiones.
-- Investigación de incidentes.
 
 ### Trazabilidad de Decisiones del Agente
 
