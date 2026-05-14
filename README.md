@@ -76,6 +76,26 @@ python rag_ejemplo_ollama.py
 
 Esta version usa persistencia separada en `chroma_db_ollama/`.
 
+## Fase 4 — Agente EcoBot (Streamlit)
+
+Interfaz web del agente con tool calling (`agente_ecomarket.py`): chat, memoria de sesión y modo debug opcional para ver tools invocadas.
+
+**Modelos Ollama usados por el agente:**
+
+```bash
+ollama pull qwen3.5:2b
+ollama pull nomic-embed-text-v2-moe
+```
+
+**Ejecución:**
+
+```bash
+pip install -r requirements.txt
+streamlit run app.py
+```
+
+Consola alternativa del mismo agente: `python agente_ecomarket.py`.
+
 ## Notas
 
 - El script soporta carga de `.txt`, `.md`, `.pdf`, `.csv` y `.json`.
