@@ -256,42 +256,42 @@ Basado en historial de compra, el agente podría recomendar:
 
 # Fase 4 — Despliegue de la aplicación
 
-## Selección de la herramienta de interfaz
+# Selección de la interfaz
 
-**Elección: Streamlit**, evaluada frente a Gradio según los dos criterios que pide el taller — **facilidad de uso** y **funcionalidad** — y la pertinencia al caso EcoBot (agente conversacional con memoria, tool calling y RAG).
+Se eligió Streamlit porque permite crear una interfaz conversacional de forma rápida y sencilla, además de adaptarse bien a las necesidades de EcoBot, como manejo de memoria, tools y RAG.
+
+## ¿Por qué Streamlit?
 
 ### 1. Facilidad de uso
 
-- **Modelo mental simple:** Streamlit ejecuta el script de la aplicación de forma lineal en cada interacción. No exige modelar eventos, callbacks ni declarar entradas/salidas por componente como sí ocurre en Gradio.
-- **Curva de aprendizaje:** una sola familia de elementos cubre layout, entradas, salidas, estado y estilos. Para un equipo que ya construyó el agente, la interfaz se siente como una extensión del mismo flujo, no como una capa tecnológica nueva.
-- **Iteración rápida:** el ciclo "editar y ver el cambio" es inmediato, lo que favorece ajustar el prompt del agente, las tools o la UI durante el desarrollo del taller.
+- Funciona como un script normal de Python, por lo que es fácil de entender y mantener.
+- No requiere manejar configuraciones complejas de componentes o callbacks como otros frameworks.
+- Permite hacer cambios y ver resultados rápidamente, lo que facilita probar el agente y ajustar la interfaz.
 
-### 2. Funcionalidad
+### 2. Funcionalidad para el agente
 
-- **Conversación por turnos nativa:** Streamlit incluye componentes específicos para representar una conversación tipo chat (mensajes con rol de usuario y asistente, campo de entrada permanente al pie). El resultado se percibe como un asistente, no como un formulario.
-- **Memoria conversacional alineada con el agente:** la herramienta dispone de un estado de sesión por usuario donde se almacena el historial tal como lo consume el agente, conservando los mensajes con su rol y las invocaciones de tools. Esto preserva el contexto entre turnos sin convertir el historial a formatos intermedios.
-- **Costo de arranque del RAG controlado:** la interfaz permite **inicializar una sola vez** los componentes pesados (modelo de chat, embeddings, vectorstore y agente) y reutilizarlos durante toda la sesión, en lugar de reconstruirlos en cada mensaje del usuario.
-- **Observabilidad del agente:** la interfaz facilita un **modo debug** opcional en la barra lateral que muestra, junto a cada respuesta, **qué tool se invocó, con qué argumentos, qué devolvió y cuánto tardó**, además del tiempo de inferencia del modelo. Esto cumple el objetivo del taller de demostrar el funcionamiento de extremo a extremo del agente.
-- **Controles de sesión:** un botón para **reiniciar la conversación** que limpia el historial mostrado y el estado interno del agente, útil durante la demostración.
+- Tiene componentes nativos para construir interfaces tipo chat.
+- Permite guardar el historial de conversación usando session_state, manteniendo el contexto entre preguntas.
+- Facilita reutilizar componentes pesados como el modelo, embeddings y vectorstore sin cargarlos nuevamente en cada interacción.
+- Se implementó un modo debug para mostrar:
+  - qué tool se ejecutó,
+  - qué argumentos recibió,
+  - qué respondió,
+  - y cuánto tardó.
+- También se incluyó un botón para reiniciar la conversación durante las pruebas.
 
-### 3. ¿Por qué no Gradio?
+## ¿Por qué no Gradio?
 
-Gradio es una excelente opción cuando el objetivo principal es **compartir un demo público rápido** mediante un enlace temporal sin desplegar infraestructura. Para EcoBot ese no es el objetivo prioritario: lo que se necesita demostrar es el **flujo conversacional con memoria**, la **invocación de tools** y los **tiempos de ejecución** de cada componente del agente, prestaciones que Streamlit cubre de forma más directa.
+Gradio es una muy buena opción para crear demos rápidas y compartirlas fácilmente. Sin embargo, para este proyecto se necesitaba más control sobre:
 
-Adicionalmente, el componente de chat de Gradio está diseñado para una interfaz funcional que recibe el mensaje del usuario y un historial en un formato simplificado de pares (usuario, bot). Esto obliga a transformar el historial enriquecido del agente en cada turno, perdiendo la trazabilidad de tools y argumentos que sí queremos exhibir en el taller.
+- el historial conversacional,
+- la memoria del agente,
+- las tools ejecutadas,
+- y la visualización del flujo interno del agente.
 
-### Resumen
+En este caso, Streamlit permitió implementar estas funcionalidades de forma más flexible y sencilla.
 
-| Criterio                       | Streamlit                                                                 | Gradio                                                              |
-| ------------------------------ | ------------------------------------------------------------------------- | ------------------------------------------------------------------- |
-| Facilidad de uso               | Script lineal, una sola familia de elementos, iteración inmediata.        | Modelo basado en componentes con entradas/salidas y callbacks.      |
-| Conversación por turnos        | Mensajes con rol de usuario/asistente y campo de chat nativos.            | Componente de chat con historial simplificado en pares.             |
-| Memoria del agente             | Historial conservado tal como lo consume el agente.                       | Requiere convertir el historial a un formato intermedio.            |
-| Cacheo del backend pesado      | Inicialización del LLM, RAG y agente una sola vez por sesión.             | Posible, pero el patrón no viene incorporado de forma idiomática.   |
-| Observabilidad (tools, tiempos) | Panel de debug por turno con tools, argumentos, resultado y tiempos.     | Posible, pero requiere componer varios elementos manualmente.       |
-| Compartir demo público         | Despliegue local o en servicio de hosting.                                | Enlace público temporal de fábrica: ventaja clara.                  |
-
-**Conclusión:** dado que el objetivo del taller es demostrar el funcionamiento de extremo a extremo del agente con memoria, tool calling y RAG —y no publicar un enlace público—, Streamlit ofrece la mejor combinación de **facilidad de uso** y **funcionalidad** para EcoBot.
+**Conclusión:** Streamlit fue la mejor opción porque permitió construir y demostrar fácilmente un agente conversacional con memoria, tools y RAG, manteniendo además una interfaz clara y fácil de probar.
 
 ## Implementación de la interfaz
 
@@ -300,7 +300,7 @@ Adicionalmente, el componente de chat de Gradio está diseñado para una interfa
   - **Entrada:** `st.chat_input` para el mensaje del usuario.
   - **Salida:** `st.chat_message` con rol `user` / `assistant` y `st.markdown` para la respuesta del agente.
   - **Memoria:** `st.session_state["historial"]` alimenta al grafo; tras cada turno se añade el `AIMessage` final para mantener contexto entre preguntas.
-  - **Rendimiento:** `st.cache_resource` en `cargar_agente()` construye el LLM, el retriever Chroma (Ollama embeddings) y `create_react_agent` una sola vez.
+  - **Rendimiento:** `st.cache_resource` en `cargar_agente()` construye el LLM, el retriever Chroma (Ollama embeddings) y `create_agent` una sola vez.
   - **Sidebar:** título, modelo en uso, **toggle "Modo debug"** que muestra un `st.expander` por respuesta del asistente con nombre de tool, argumentos (`st.json`) y resultado truncado (`st.code`), y botón **"Reiniciar conversacion"** que vacía historial y turnos renderizados.
 
 ## Demostración funcional (end-to-end)
@@ -322,5 +322,3 @@ Ollama debe estar en ejecución. El índice vectorial se reutiliza desde `chroma
 2. **Pedido:** *«¿Qué contiene mi pedido ECO-PED-0001?»* → `consultar_informacion_pedido`.
 3. **Devolución completa:** indicar intención de devolución, facilitar número de pedido y SKUs cuando el agente los pida → cadena coherente que puede incluir políticas, datos del pedido y `generar_etiqueta_devolucion` según el diálogo.
 4. **Fuera de alcance:** *«Cuéntame un chiste»* → rechazo amable alineado al prompt del sistema.
-
-**Evidencia sugerida para la entrega:** captura de pantalla de la conversación con el expander **«Tools invocadas en este turno»** visible, mostrando al menos una invocación real al RAG o a otra tool.
